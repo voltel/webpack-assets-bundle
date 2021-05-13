@@ -1,0 +1,44 @@
+{
+    "name": "voltel/webpack-assets-bundle",
+    "description": "Twig functions to list CSS/JS asset files and load concatenated CSS content for entrypoints after Webpack build",
+    "type": "symfony-bundle",
+    "keywords": [
+        "webpack",
+        "entrypoints",
+        "assets",
+        "twig",
+        "stats-writer-plugin",
+        "inline-css",
+        "emails"
+    ],
+    "require": {
+        "php": "^7.4.11 || ^8.0.2",
+        "twig/twig": "^2.4.4 || ^3.0",
+        "ext-json": "*",
+        "symfony/dependency-injection": "^5.1",
+        "symfony/http-kernel": "^5.1",
+        "symfony/config": "^5.1"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^5.2",
+        "symfony/framework-bundle" : "5.2",
+        "symfony/browser-kit": "^5.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Volodymyr Telnov",
+            "email": "volodymyr.telnov@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Voltel\\WebpackAssetsBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}

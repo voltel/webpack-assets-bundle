@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="voltel_webpack_assets.entrypoint_registry" class="Voltel\WebpackAssetsBundle\Service\EntrypointAssetsRegistryService">
+            <argument /> <!-- project root dir - will be filled in dynamically -->
+            <argument>stats.json</argument> <!-- webpack stats filepath - will be filled in dynamically -->
+            <argument>public</argument> <!-- app public dir - will be filled in dynamically -->
+            <argument>dist</argument> <!-- webpack output dir - will be filled in dynamically -->
+        </service>
+
+        <!-- Read at: https://symfony.com/doc/current/templating/twig_extension.html#register-an-extension-as-a-service -->
+        <service id="voltel_webpack_assets.twig_functions" class="Voltel\WebpackAssetsBundle\Service\TwigFunctionsExtension">
+            <tag>twig.extension</tag>
+        </service>
+
+        <service id="voltel_webpack_assets.twig_runtime" class="Voltel\WebpackAssetsBundle\Service\WebpackEntryRuntime">
+            <tag>twig.runtime</tag>
+            <argument type="service" id="voltel_webpack_assets.entrypoint_registry" />
+        </service>
+
+        <!-- Aliases -->
+        <service id="Voltel\WebpackAssetsBundle\Service\EntrypointAssetsRegistryService" alias="voltel_webpack_assets.entrypoint_registry" />
+
+    </services>
+</container>

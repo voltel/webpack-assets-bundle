@@ -1,0 +1,66 @@
+{
+  "errors": [],
+  "warnings": [],
+  "outputPath": "tests/Setup/public/dist",
+  "entrypoints": {
+    "entry_one": {
+      "chunks": [
+        "entry_one"
+      ],
+      "assets": [
+        "entry_one.57c4f3.js",
+        "entry_one.c5d682.css",
+        "entry_one.d25cs3.js",
+        "entry_one.e4a05a.css"
+      ],
+      "children": {},
+      "childAssets": {}
+    },
+    "entry_two": {
+      "chunks": [
+        "entry_two"
+      ],
+      "assets": [
+        "entry_two.5a4d3e.css",
+        "entry_two.16efbc.css",
+        "entry_two.75a34f.css",
+        "entry_two.0386a7.js",
+        "entry_two.657bd1.js",
+        "entry_two.e6cffd.js"
+      ],
+      "children": {},
+      "childAssets": {}
+    },
+    "entry_css_only": {
+      "chunks": [
+        "entry_css_only"
+      ],
+      "assets": [
+        "entry_one.e4a05a.css",
+        "entry_two.16efbc.css"
+      ],
+      "children": {},
+      "childAssets": {}
+    },
+    "entry_js_only": {
+      "chunks": [
+        "entry_js_only"
+      ],
+      "assets": [
+        "entry_two.0386a7.js",
+        "entry_two.657bd1.js"
+      ],
+      "children": {},
+      "childAssets": {}
+    },
+    "entry_no_assets": {
+      "chunks": [
+        "entry_no_assets"
+      ],
+      "assets": [
+      ],
+      "children": {},
+      "childAssets": {}
+    }
+  }
+}
