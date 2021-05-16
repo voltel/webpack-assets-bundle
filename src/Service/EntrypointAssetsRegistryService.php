@@ -84,13 +84,6 @@ class EntrypointAssetsRegistryService
 
         foreach ($a_relative_urls as $c_this_relative_url) {
             $c_this_filepath = join('/', [$this->projectDir, $this->publicDir, $c_this_relative_url]);
-            //
-            if (!file_exists($c_this_filepath)) {
-                $c_message = sprintf('Did you forget to re-create a stats.json file during the last webpack build? Use "webpack --quiet --json > stats.json" to compile a file ready for parsing. ');
-                throw new \RuntimeException(sprintf('Failed to locate webpack output file "%s" in the local filesystem for entry points "%s". ' . $c_message,
-                    $c_this_filepath, implode('", "', $a_entry_names)));
-            }//endif
-
             $c_content .= file_get_contents($c_this_filepath);
         }//endforeach
 
@@ -143,10 +136,12 @@ class EntrypointAssetsRegistryService
             }//endif
 
             foreach ($a_registry[$c_this_entry_name][$c_assets_type] as $c_this_filename) {
-                $c_this_filepath = $this->projectDir . DIRECTORY_SEPARATOR . $this->publicDir . DIRECTORY_SEPARATOR . $this->webpackOutputDir . DIRECTORY_SEPARATOR . $c_this_filename;
+                $c_configured_filepath = join('/', [$this->projectDir, $this->publicDir, $this->webpackOutputDir, $c_this_filename]);
+                $c_this_filepath = realpath($c_configured_filepath);
+                //
                 if (!file_exists($c_this_filepath)) {
                     $c_message = sprintf('Did you forget to re-create a stats.json file during the last webpack build? Use "webpack --quiet --json > stats.json" to compile a file ready for parsing. ');
-                    throw new \RuntimeException(sprintf('Failed to locate webpack output file "%s" in the local filesystem for entry point "%s". ' . $c_message, $c_this_filepath, $c_this_entry_name));
+                    throw new \RuntimeException(sprintf('Failed to locate webpack output file "%s" in the local filesystem for entry point "%s". ' . $c_message, $c_configured_filepath, $c_this_entry_name));
                 }//endif
 
                 $a_file_urls[] = '/' . $this->webpackOutputDir . '/' . $c_this_filename;
@@ -168,10 +163,12 @@ class EntrypointAssetsRegistryService
     {
         if (!empty(self::$entryPointRegistry)) return self::$entryPointRegistry;
 
-        $c_full_filepath = $this->projectDir . DIRECTORY_SEPARATOR . $this->webpackStatsFilepath;
+        $c_configured_filepath = join('/', [$this->projectDir, $this->webpackStatsFilepath]);
+        $c_full_filepath = realpath($c_configured_filepath);
         //
         if (!file_exists($c_full_filepath)) {
-            throw new \RuntimeException(sprintf('Failure to locate file with webpack statistics "%s" in the local file system', $c_full_filepath));
+            throw new \RuntimeException(sprintf('Failure to locate file with webpack statistics in the local file system: "%s"',
+                $c_configured_filepath));
         }//endif
 
 

@@ -1,7 +1,7 @@
 VoltelWebpackAssetsBundle
 ============================
 
-**VoltelWebpackAssetsBundle** introduces several Twig functions 
+**VoltelWebpackAssetsBundle** is a Symfony bundle that introduces several Twig functions 
 that parse Webpack output and help to:
 - get a **list of urls** for CSS/JS asset files for any **entrypoint(s)** of interest;
 - get a **concatenated CSS content string** for **entrypoint(s)** of interest.
@@ -30,7 +30,7 @@ $ composer require voltel/webpack-assets-bundle
 Applications that don't use Symfony Flex
 ----------------------------------------
 
-###Step 1: Download the Bundle
+### Step 1: Download the Bundle
 
 Open a terminal, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
@@ -38,7 +38,7 @@ following command to download the latest stable version of this bundle:
 $ composer require voltel/extra-foundry-bundle
 ```
 
-###Step 2: Enable the Bundle
+### Step 2: Enable the Bundle
 
 Then, enable the bundle by adding it to the list of registered bundles
 in the ``config/bundles.php`` file of your project:
@@ -50,6 +50,58 @@ in the ``config/bundles.php`` file of your project:
         Voltel\WebpackAssetsBundle\VoltelWebpackAssetsBundle::class => ['all' => true],
     ];
 ```
+
+Bundle configuration
+=====================
+
+Create configuration file (e.g. ``voltel_webpack_assets.yaml``) in ``config/packages/`` directory.
+
+As usual, *default configuration* may be inspected by console command:
+```shell script
+$ php bin/console config:dump voltel_webpack_assets
+```
+To inspect *current configuration*, run console command:
+```shell script
+$ php bin/console debug:config voltel_webpack_assets
+```
+
+Default configuration:
+
+```yaml
+# in config/packages/voltel_webpack_assets.yaml
+
+voltel_webpack_assets:
+
+    # Name of the public web-content base-folder (e.g "public")
+    public_dir_name:      public
+
+    webpack:
+        # Filepath of the "StatsWriterPlugin" plugin output RELATIVE to the project root
+        stats_filepath:       stats.json
+
+        # Name of the Webpack build output folder (e.g. "dist" or "build")
+        output_dir_name:      dist
+
+```
+
+- **public_dir_name**: name of the directory with files accessible from the Internet. 
+  Webpack will save its output in a sub-folder of this directory 
+  (see **webpack.output_dir_name** configuration parameter below). 
+  
+  The value may be a path relative to the project root, 
+  which is unusual but not impossible (e.g. ``./public``).   
+  
+- **webpack.stats_filepath**: path to the file with Webpack statistics output, relative to the root of the project. 
+  With default values, the ``stats.json`` file is located in the root of the project.
+  If, for example, your Webpack configuration places generated ``stats.json`` file 
+  in e.g. ``public/dist`` directory, use ``public/dist/stats.json`` value instead. 
+  
+- **webpack.output_dir_name**: name of the directory inside the public directory 
+  (see **public_dir_name** configuration parameter above) 
+  where Webpack outputs files created during the build. 
+  The value may be a path relative to the public directory, 
+  which is unusual but not impossible (e.g. ``./build``).   
+
 
 
 Usage
@@ -80,6 +132,28 @@ or an array of strings with names of entrypoints to load assets from:
         <script src="{{ absolute_url(c_this_relative_url) }}">
     {% endfor %}
 ``` 
+
+Similar result may be achieved with custom Twig functions --
+**print_css_link_tags** and **print_js_script_tags** --
+that print all ``<link>`` and ``<script>`` html tags at once
+for the entrypoint(s) from the first argument:
+
+```twig
+    {# in homepage.html.twig #}
+    
+    {% set l_print_absolute_url = true %}
+
+    {# to print <link type="stylesheet"> html tags in one go #}
+    {{ print_css_link_tags('homepage') }}
+    {{ print_css_link_tags(['common_layout', 'homepage']) }}
+    {{ print_css_link_tags(['common_layout', 'homepage'], l_print_absolute_url) }}
+
+    {# to print <script src=""> html tags in one go #}
+    {{ print_js_script_tags('homepage') }}
+    {{ print_js_script_tags(['common_layout', 'homepage']) }}
+    {{ print_js_script_tags(['common_layout', 'homepage'], l_print_absolute_url) }}
+
+```  
 
 
 HTML email content: ``entry_css_source`` Twig function   

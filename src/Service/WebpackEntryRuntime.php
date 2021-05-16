@@ -2,6 +2,7 @@
 
 namespace Voltel\WebpackAssetsBundle\Service;
 
+use Symfony\Component\HttpFoundation\UrlHelper;
 use Twig\Extension\RuntimeExtensionInterface;
 
 class WebpackEntryRuntime implements RuntimeExtensionInterface
@@ -9,11 +10,16 @@ class WebpackEntryRuntime implements RuntimeExtensionInterface
     /** @var EntrypointAssetsRegistryService */
     private $entrypointAssetsRegistryService;
 
+    /** @var AssetsTagsPrintService */
+    private $assetsTagsPrintService;
+
     public function __construct(
-        EntrypointAssetsRegistryService $entrypointAssetsRegistryService
+        EntrypointAssetsRegistryService $entrypointAssetsRegistryService,
+        AssetsTagsPrintService $assetsTagsPrintService
     )
     {
         $this->entrypointAssetsRegistryService = $entrypointAssetsRegistryService;
+        $this->assetsTagsPrintService = $assetsTagsPrintService;
     }
 
     /**
@@ -28,7 +34,7 @@ class WebpackEntryRuntime implements RuntimeExtensionInterface
      */
     public function getCssFileContentStringForEntries(...$a_entrypoints) : string
     {
-        if (empty($mix_entry_points)) {
+        if (empty($a_entrypoints) || empty($a_entrypoints[0])) {
             throw new \LogicException(sprintf('voltel: Did you forget to provide one or more webpack entrypoint names or an array of entrypoint names for custom Twig Function "entry_css_source" to import css from?'));
         }//endif
 
@@ -70,6 +76,48 @@ class WebpackEntryRuntime implements RuntimeExtensionInterface
         }//endif
 
         return $this->entrypointAssetsRegistryService->getJsAssetsRelativeUrlsForEntries($mix_entry_points);
+    }
+
+
+    /**
+     * USAGE:
+     * print_css_link_tags('homepage')
+     * print_css_link_tags(['homepage'])
+     * print_css_link_tags(['common_layout', 'homepage'])
+     * print_css_link_tags('homepage', true)
+     *
+     * @param string|array<string> $mix_entrypoints
+     * @param bool $l_absolute_urls
+     * @return string
+     */
+    public function printCssLinkTagsForEntries($mix_entrypoints, bool $l_absolute_urls = false) : string
+    {
+        if (empty($mix_entry_points)) {
+            throw new \LogicException(sprintf('voltel: Did you forget to provide webpack entrypoint name or an array of names for custom Twig Function "print_css_link_tags"?'));
+        }//endif
+
+        return $this->assetsTagsPrintService->printCssLinkTagsForEntries((array) $mix_entry_points, $l_absolute_urls);
+    }
+
+
+    /**
+     * USAGE:
+     * print_js_script_tags('homepage')
+     * print_js_script_tags(['homepage'])
+     * print_js_script_tags(['common_layout', 'homepage'])
+     * print_js_script_tags('homepage', true)
+     *
+     * @param string|array<string> $mix_entrypoints
+     * @param bool $l_absolute_urls
+     * @return string
+     */
+    public function printJsScriptTagsForEntries($mix_entrypoints, bool $l_absolute_urls = false) : string
+    {
+        if (empty($mix_entry_points )) {
+            throw new \LogicException(sprintf('voltel: Did you forget to provide webpack entrypoint name or an array of names for custom Twig Function "print_js_script_tags"?'));
+        }//endif
+
+        return $this->assetsTagsPrintService->printCssLinkTagsForEntries((array) $mix_entry_points, $l_absolute_urls);
     }
 
 }//end of class

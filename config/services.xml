@@ -20,6 +20,12 @@
         <service id="voltel_webpack_assets.twig_runtime" class="Voltel\WebpackAssetsBundle\Service\WebpackEntryRuntime">
             <tag>twig.runtime</tag>
             <argument type="service" id="voltel_webpack_assets.entrypoint_registry" />
+            <argument type="service" id="voltel_webpack_assets.print_tags" />
+        </service>
+
+        <service id="voltel_webpack_assets.print_tags" class="Voltel\WebpackAssetsBundle\Service\AssetsTagsPrintService">
+            <argument type="service" id="url_helper"/>
+            <argument type="service" id="voltel_webpack_assets.entrypoint_registry" />
         </service>
 
         <!-- Aliases -->
